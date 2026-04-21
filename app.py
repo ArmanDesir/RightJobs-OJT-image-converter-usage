@@ -39,7 +39,7 @@ def fit_image_on_canvas(img, canvas_size=CANVAS_SIZE, transparent=False):
     x = (canvas_size - new_width) // 2
     y = (canvas_size - new_height) // 2
 
-    if img_resized.mode == "RGBA":
+    if img_resized.mode == "RGBAa":
         canvas.paste(img_resized, (x, y), img_resized)
     else:
         canvas.paste(img_resized, (x, y))
