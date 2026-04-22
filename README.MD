@@ -1,8 +1,4 @@
 
-<div align="center">
-  
-    <h1>Image Converter with Background Removal</h1>
-</div>
 
 ## Features
 
