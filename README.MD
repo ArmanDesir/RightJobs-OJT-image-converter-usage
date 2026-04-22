@@ -1,8 +1,4 @@
 
-<div align="center">
-    <img src="static/monyet.png" height="400" alt="logo" /> 
-    <h1>Image Converter with Background Removal</h1>
-</div>
 
 ## Features
 
