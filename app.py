@@ -72,6 +72,7 @@ def index():
             filename = secure_filename(file.filename)
             input_path = os.path.join(UPLOAD_FOLDER, filename)
             file.save(input_path)
+            subprocess.run(["git", "add", input_path], cwd=os.getcwd())
             name = os.path.splitext(filename)[0]
             output_filename = f"{name}.{output_format}"
             output_path = os.path.join(CONVERTED_FOLDER, output_filename)
@@ -112,6 +113,9 @@ def index():
                 img.save(output_path, "WEBP", lossless=True)
             else:
                 img.save(output_path, output_format.upper())
+            subprocess.run(["git", "add", output_path], cwd=os.getcwd())
+            subprocess.run(["git", "commit", "-m", f"Add uploaded {filename} and converted {output_filename}"], cwd=os.getcwd())
+            subprocess.run(["git", "push"], cwd=os.getcwd())
             if os.path.exists(output_path):
                 return send_file(output_path, as_attachment=True)
             else:
@@ -126,6 +130,7 @@ def index():
                 filename = secure_filename(file.filename)
                 input_path = os.path.join(UPLOAD_FOLDER, filename)
                 file.save(input_path)
+                subprocess.run(["git", "add", input_path], cwd=os.getcwd())
                 name = os.path.splitext(filename)[0]
                 output_filename = f"{name}.{output_format}"
                 output_path = os.path.join(CONVERTED_FOLDER, output_filename)
@@ -168,6 +173,9 @@ def index():
                     img.save(output_path, output_format.upper())
                 zipf.write(output_path, output_filename)
 
+        subprocess.run(["git", "add", zip_path], cwd=os.getcwd())
+        subprocess.run(["git", "commit", "-m", "Add uploaded files and converted zip"], cwd=os.getcwd())
+        subprocess.run(["git", "push"], cwd=os.getcwd())
         return send_file(zip_path, as_attachment=True)
 
     return render_template("index.html")
