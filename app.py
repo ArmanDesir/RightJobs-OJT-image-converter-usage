@@ -6,11 +6,12 @@ from werkzeug.utils import secure_filename
 import io
 
 # Optional: background removal
-try:
-    from rembg import remove
-    REMBG_AVAILABLE = True
-except Exception:
-    REMBG_AVAILABLE = False
+# try:
+#     from rembg import remove
+#     REMBG_AVAILABLE = True
+# except Exception:
+#     REMBG_AVAILABLE = False
+REMBG_AVAILABLE = False
 
 app = Flask(__name__)
 
