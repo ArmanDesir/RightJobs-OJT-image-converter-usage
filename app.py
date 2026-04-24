@@ -105,7 +105,12 @@ def index():
             if output_format in ["jpg", "jpeg"]:
                 img = img.convert("RGB")
 
-            img.save(output_path, output_format.upper())
+            if output_format.upper() in ["JPEG", "JPG"]:
+                img.save(output_path, output_format.upper(), quality=100)
+            elif output_format.upper() == "WEBP":
+                img.save(output_path, "WEBP", quality=100)
+            else:
+                img.save(output_path, output_format.upper())
             return send_file(output_path, as_attachment=True)
 
         # Multiple files → ZIP
@@ -151,7 +156,12 @@ def index():
                 if output_format in ["jpg", "jpeg"]:
                     img = img.convert("RGB")
 
-                img.save(output_path, output_format.upper())
+                if output_format.upper() in ["JPEG", "JPG"]:
+                    img.save(output_path, output_format.upper(), quality=100)
+                elif output_format.upper() == "WEBP":
+                    img.save(output_path, "WEBP", quality=100)
+                else:
+                    img.save(output_path, output_format.upper())
                 zipf.write(output_path, output_filename)
 
         return send_file(zip_path, as_attachment=True)
