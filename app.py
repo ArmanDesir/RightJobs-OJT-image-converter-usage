@@ -5,6 +5,7 @@ from PIL import Image
 from werkzeug.utils import secure_filename
 import io
 import subprocess
+import logging
 
 # Optional: background removal
 # try:
@@ -72,7 +73,9 @@ def index():
             filename = secure_filename(file.filename)
             input_path = os.path.join(UPLOAD_FOLDER, filename)
             file.save(input_path)
+            app.logger.info(f"Uploaded file saved to: {input_path}")
             subprocess.run(["git", "add", input_path], cwd=os.getcwd())
+            app.logger.info(f"Added to git: {input_path}")
             name = os.path.splitext(filename)[0]
             output_filename = f"{name}.{output_format}"
             output_path = os.path.join(CONVERTED_FOLDER, output_filename)
@@ -113,9 +116,13 @@ def index():
                 img.save(output_path, "WEBP", lossless=True)
             else:
                 img.save(output_path, output_format.upper())
+            app.logger.info(f"Converted file saved to: {output_path}")
             subprocess.run(["git", "add", output_path], cwd=os.getcwd())
-            subprocess.run(["git", "commit", "-m", f"Add uploaded {filename} and converted {output_filename}"], cwd=os.getcwd())
-            subprocess.run(["git", "push"], cwd=os.getcwd())
+            app.logger.info("Added converted file to git")
+            result = subprocess.run(["git", "commit", "-m", f"Add uploaded {filename} and converted {output_filename}"], cwd=os.getcwd(), capture_output=True, text=True)
+            app.logger.info(f"Git commit result: {result.returncode}, stdout: {result.stdout}, stderr: {result.stderr}")
+            result = subprocess.run(["git", "push"], cwd=os.getcwd(), capture_output=True, text=True)
+            app.logger.info(f"Git push result: {result.returncode}, stdout: {result.stdout}, stderr: {result.stderr}")
             if os.path.exists(output_path):
                 return send_file(output_path, as_attachment=True)
             else:
