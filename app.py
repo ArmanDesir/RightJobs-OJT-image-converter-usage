@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, send_file
 from PIL import Image
 from werkzeug.utils import secure_filename
 import io
+import subprocess
 
 # Optional: background removal
 # try:
