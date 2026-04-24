@@ -9,7 +9,7 @@ import io
 try:
     from rembg import remove
     REMBG_AVAILABLE = True
-except ImportError:
+except Exception:
     REMBG_AVAILABLE = False
 
 app = Flask(__name__)
