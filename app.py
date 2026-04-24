@@ -15,8 +15,8 @@ REMBG_AVAILABLE = False
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = "uploads"
-CONVERTED_FOLDER = "converted"
+UPLOAD_FOLDER = os.path.abspath("uploads")
+CONVERTED_FOLDER = os.path.abspath("converted")
 CANVAS_SIZE = 800
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -105,13 +105,16 @@ def index():
             if output_format in ["jpg", "jpeg"]:
                 img = img.convert("RGB")
 
-            if output_format.upper() in ["JPEG", "JPG"]:
-                img.save(output_path, output_format.upper(), quality=100)
-            elif output_format.upper() == "WEBP":
-                img.save(output_path, "WEBP", quality=100)
+            if output_format.lower() in ["jpg", "jpeg"]:
+                img.save(output_path, "JPEG", quality=100)
+            elif output_format.lower() == "webp":
+                img.save(output_path, "WEBP", lossless=True)
             else:
                 img.save(output_path, output_format.upper())
-            return send_file(output_path, as_attachment=True)
+            if os.path.exists(output_path):
+                return send_file(output_path, as_attachment=True)
+            else:
+                return "Error: Converted file not found", 500
 
         # Multiple files → ZIP
         zip_path = os.path.join(CONVERTED_FOLDER, "converted_images.zip")
@@ -156,10 +159,10 @@ def index():
                 if output_format in ["jpg", "jpeg"]:
                     img = img.convert("RGB")
 
-                if output_format.upper() in ["JPEG", "JPG"]:
-                    img.save(output_path, output_format.upper(), quality=100)
-                elif output_format.upper() == "WEBP":
-                    img.save(output_path, "WEBP", quality=100)
+                if output_format.lower() in ["jpg", "jpeg"]:
+                    img.save(output_path, "JPEG", quality=100)
+                elif output_format.lower() == "webp":
+                    img.save(output_path, "WEBP", lossless=True)
                 else:
                     img.save(output_path, output_format.upper())
                 zipf.write(output_path, output_filename)
